@@ -134,7 +134,7 @@ namespace WinFormsMyOPRGame
 
         public void GamePause()
         {
-            Console.WriteLine("XXXXXXXXXX");
+            //Console.WriteLine("XXXXXXXXXX");
         }
         public void ResumeGame()
         {
@@ -272,6 +272,7 @@ namespace WinFormsMyOPRGame
     class Drawer
     {
         Form form;
+        int cellSize = 20;
         public Drawer(Form form)
         {
             this.form = form;
@@ -280,7 +281,7 @@ namespace WinFormsMyOPRGame
         public void DrawField(Field field)
         {
             form.Controls.Clear();
-            int cellSize = 20; // Adjust the size as needed
+             // Adjust the size as needed
 
             for (int i = 0; i < field.Height; i++)
             {
@@ -294,42 +295,63 @@ namespace WinFormsMyOPRGame
                     //    TextAlign = ContentAlignment.MiddleCenter
                     //};
                     Image cellImage = field.Cells[j, i].img; // Get the image for the symbol
-
-                    PictureBox pictureBox = new PictureBox
-                    {
-                        Image = cellImage,
-                        Location = new Point(j * cellSize, i * cellSize),
-                        Size = new Size(cellSize, cellSize),
-                        SizeMode = PictureBoxSizeMode.Zoom
-                    };
-
-                    form.Controls.Add(pictureBox);
+                    DrawPic(new Coordinate(j, i), cellImage);
+                    
                     //form.Controls.Add(cellLabel);
                 }
             }
         }
 
+        private void DrawPic(Coordinate coordinate, Image cellImage)
+        {
+            int x = coordinate.X;
+            int y = coordinate.Y;
+            PictureBox pictureBox = new PictureBox
+            {
+                Image = cellImage,
+                Location = new Point(x * cellSize, y * cellSize),
+                Size = new Size(cellSize, cellSize),
+                SizeMode = PictureBoxSizeMode.Zoom
+            };
+            if (form.Controls.Contains(pictureBox))
+            {
+                form.Controls.Remove(pictureBox);
+            }
+            form.BeginInvoke(new Action(() =>
+            {
+                form.Controls.Add(pictureBox);
+            }));
+        }
+
         public void DrawEnemies(Field field)
         {
-            /*Coordinate currentCursorPosition;
+            //Coordinate currentCursorPosition;
+            form.BeginInvoke(new Action(() =>
+            {
+                form.Controls.Clear();
+            }));
+            
             for (int i = 0; i < field.Height; i++)
             {
                 for (int j = 0; j < field.Width; j++)
                 {
-                    currentCursorPosition = new Coordinate(Console.CursorLeft, Console.CursorTop);
-                    Console.SetCursorPosition(j, i);
+                    //currentCursorPosition = new Coordinate(Console.CursorLeft, Console.CursorTop);
+                    //Console.SetCursorPosition(j, i);
                     if (field.EnemiesMap[j, i] == null || field.EnemiesMap[j, i].Count == 0)
                     {
-                        Console.Write(field.Cells[j, i].symbol);
+                        Image cellImage = field.Cells[j, i].img; 
+                        DrawPic(new Coordinate(j, i), cellImage);
                     }
                     else
                     {
-                        Console.Write(field.EnemiesMap[j, i][field.EnemiesMap[j, i].Count - 1].symbol);
+                        Image cellImage = field.EnemiesMap[j, i][field.EnemiesMap[j, i].Count - 1].img;
+                        DrawPic(new Coordinate(j, i), cellImage);
+                        //Console.Write(field.EnemiesMap[j, i][field.EnemiesMap[j, i].Count - 1].symbol);
                     }
 
-                    Console.SetCursorPosition(currentCursorPosition.X, currentCursorPosition.Y);
+                    //Console.SetCursorPosition(currentCursorPosition.X, currentCursorPosition.Y);
                 }
-            }*/
+            }
         }
         // TODO: метод має приймати лише позицію кожного ворога та перемальвувати тільки його. 
 
@@ -586,7 +608,7 @@ namespace WinFormsMyOPRGame
         public override bool CanGo => true;
         public override char symbol => '!';
         public override ConsoleColor color => ConsoleColor.Red;
-
+        public override Image img => Properties.Resources.Portal1;
 
         public EnemyBase(int posX, int posY) : base(posX, posY)
         {
@@ -600,6 +622,7 @@ namespace WinFormsMyOPRGame
         public override bool CanGo => true;
         public override char symbol => '~';
         public override ConsoleColor color => ConsoleColor.Blue;
+        public override Image img => Properties.Resources.Portal2;
 
         public PlayerBase(int posX, int posY) : base(posX, posY)
         {
@@ -721,6 +744,7 @@ namespace WinFormsMyOPRGame
         public int range = 0;
         public double speed { get; set; } = 1.5;
         public virtual char symbol { get; set; } = 'E';
+        public virtual Image img { get; set; } = Properties.Resources.Wall;
         public bool IsAlive => HP > 0;
         public Coordinate position { get; set; }
         Cell[,] field;
@@ -894,7 +918,7 @@ namespace WinFormsMyOPRGame
 
             Form1 form = new Form1();
             Game newGame = new Game(form); // Передача ссылки на форму в конструктор Game
-
+            
             form.Show(); // Отображение формы
             Application.Run(form);
 

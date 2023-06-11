@@ -15,6 +15,8 @@ namespace WinFormsMyOPRGame
         public Form1()
         {
             InitializeComponent();
+
+            this.DoubleBuffered = true;
         }
 
     }
