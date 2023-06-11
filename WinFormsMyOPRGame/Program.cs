@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Diagnostics;
 using System.Windows.Forms;
+using System.Drawing;
 
 namespace WinFormsMyOPRGame
 {
@@ -27,6 +28,8 @@ namespace WinFormsMyOPRGame
         MainMenu menu;
         Form form;
         protected Dictionary<string, Action> menuItems;
+
+
         public Game(in Form form) { 
             this.form = form;
             menuItems = new Dictionary<string, Action>()
@@ -49,7 +52,7 @@ namespace WinFormsMyOPRGame
 
     }
 
-    class GameProcess : Game
+    class GameProcess
     {
         Form form;
         Field field;
@@ -59,7 +62,7 @@ namespace WinFormsMyOPRGame
         private ManualResetEvent pauseEvent = new ManualResetEvent(true);
 
 
-        public GameProcess(Form form, int lvlID) : base(form)
+        public GameProcess(Form form, int lvlID)
         {
             this.form = form;
             drawer = new Drawer(form);
@@ -276,15 +279,34 @@ namespace WinFormsMyOPRGame
 
         public void DrawField(Field field)
         {
-            /*Console.Clear();
+            form.Controls.Clear();
+            int cellSize = 20; // Adjust the size as needed
+
             for (int i = 0; i < field.Height; i++)
             {
                 for (int j = 0; j < field.Width; j++)
                 {
-                    Console.Write(field.Cells[j, i].symbol);
+                    //Label cellLabel = new Label
+                    //{
+                    //    Text = field.Cells[j, i].symbol.ToString(),
+                    //    Location = new Point(j * cellSize, i * cellSize),
+                    //    Size = new Size(cellSize, cellSize),
+                    //    TextAlign = ContentAlignment.MiddleCenter
+                    //};
+                    Image cellImage = field.Cells[j, i].img; // Get the image for the symbol
+
+                    PictureBox pictureBox = new PictureBox
+                    {
+                        Image = cellImage,
+                        Location = new Point(j * cellSize, i * cellSize),
+                        Size = new Size(cellSize, cellSize),
+                        SizeMode = PictureBoxSizeMode.Zoom
+                    };
+
+                    form.Controls.Add(pictureBox);
+                    //form.Controls.Add(cellLabel);
                 }
-                Console.Write('\n');
-            }*/
+            }
         }
 
         public void DrawEnemies(Field field)
@@ -372,7 +394,6 @@ namespace WinFormsMyOPRGame
         {
             Drawer drawer = new Drawer(_form);
             drawer.DrawMenu(this);
-            OptionChecker(SelectMenuItem());
             MenuItems = _menuItems;
         }
 
@@ -385,7 +406,6 @@ namespace WinFormsMyOPRGame
         {
             Environment.Exit(0);
         }
-        protected abstract void OptionChecker(int optionID);
     }
 
     class MainMenu : Menu
@@ -397,18 +417,6 @@ namespace WinFormsMyOPRGame
         public MainMenu(in Form _form, Dictionary<string, Action> menuItems) : base(_form, menuItems)
         {
             form = _form;
-        }
-        protected override void OptionChecker(int optionID)
-        {
-            switch (optionID)
-            {
-                case 0:
-                    GameProcess process = new GameProcess(form, 1);
-                    break;
-                case 1:
-                    Exit();
-                    break;
-            }
         }
     }
 
@@ -426,20 +434,6 @@ namespace WinFormsMyOPRGame
             currentGame = game;
         }
 
-        protected override void OptionChecker(int optionID)
-        {
-            switch (optionID)
-            {
-                case 0:
-                    break;
-                case 1:
-                    GameProcess process = new GameProcess(form, 1);
-                    break;
-                case 2:
-                    Exit();
-                    break;
-            }
-        }
     }
 
     class Field
@@ -559,6 +553,7 @@ namespace WinFormsMyOPRGame
         public virtual ConsoleColor color { get; set; }
         public virtual bool CanGo { get; set; }
         public virtual char symbol { get; set; }
+        public virtual Image img => Properties.Resources.Wall2; //////////
 
 
         protected Cell(int posX, int posY)
@@ -572,6 +567,7 @@ namespace WinFormsMyOPRGame
     {
         public override bool CanGo => false;
         public override char symbol => '#';
+        public override Image img => Properties.Resources.Wall2;
         public override ConsoleColor color => ConsoleColor.White;
 
 
@@ -614,6 +610,7 @@ namespace WinFormsMyOPRGame
     {
         public override bool CanGo => true;
         public override char symbol => ' ';
+        public override Image img => Properties.Resources.Floor;
         public override ConsoleColor color => ConsoleColor.Black;
 
         public Space(int posX, int posY) : base(posX, posY)
