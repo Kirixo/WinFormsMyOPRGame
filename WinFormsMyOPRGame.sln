@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.33423.256
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinFormsMyOPRGame", "WinFormsMyOPRGame\WinFormsMyOPRGame.csproj", "{F06369C1-7BCD-4724-AC17-F2E722F3414A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F06369C1-7BCD-4724-AC17-F2E722F3414A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F06369C1-7BCD-4724-AC17-F2E722F3414A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F06369C1-7BCD-4724-AC17-F2E722F3414A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F06369C1-7BCD-4724-AC17-F2E722F3414A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8120C8BA-F0CA-4919-8380-6CBB33AC56C5}
+	EndGlobalSection
+EndGlobal
