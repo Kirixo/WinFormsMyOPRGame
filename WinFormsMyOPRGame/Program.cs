@@ -23,6 +23,7 @@ namespace WinFormsMyOPRGame
             Y = y;
         }
     }
+
     class Game
     {
         MainMenu menu;
@@ -57,7 +58,6 @@ namespace WinFormsMyOPRGame
         Form form;
         Field field;
         Drawer drawer;
-        Thread enemyThread;
         Thread userPrompts;
         private ManualResetEvent pauseEvent = new ManualResetEvent(true);
 
@@ -90,17 +90,7 @@ namespace WinFormsMyOPRGame
             //
             //drawer.DrawScore(field);
             //Для генерації ворогів десь повинна бути окрема функція
-            const int ENEMY_COUNT = 5;
-            const int ENEMY_INTERVAL = 15000;
-            enemyThread = new Thread(() => {
-                for (int i = 0; i < ENEMY_COUNT; i++)
-                {
-                    Enemy enemy = new Enemy(field.Cells);
-                    field.AddingEnemies(enemy, 0, 1);
-                    Thread.Sleep(ENEMY_INTERVAL);
-                }
-            });
-            enemyThread.Start();
+            
 
             userPrompts = new Thread(() => {
                 Gaming();
@@ -503,7 +493,7 @@ namespace WinFormsMyOPRGame
                             Cells[j, i] = new Space(j, i);
                             break;
                         case '!':
-                            Cells[j, i] = new EnemyBase(j, i);
+                            Cells[j, i] = new EnemyBase(j, i, this);
                             break;
                         case 'X':
                             Cells[j, i] = new PlayerBase(j, i);
@@ -517,8 +507,10 @@ namespace WinFormsMyOPRGame
             }
         }
 
-        public void AddingEnemies(Enemy enemy, int x, int y)
+        public void AddingEnemies(Enemy enemy)
         {
+            int x = enemy.Base.X;
+            int y = enemy.Base.Y;
             enemy.MoveEvent += MoveEnemy;
             enemy.EnemyDie += EnemyDie;
             EnemiesMap[x, y].Add(enemy);
@@ -610,9 +602,25 @@ namespace WinFormsMyOPRGame
         public override ConsoleColor color => ConsoleColor.Red;
         public override Image img => Properties.Resources.Portal1;
 
-        public EnemyBase(int posX, int posY) : base(posX, posY)
+        public EnemyBase(int posX, int posY, Field field) : base(posX, posY)
         {
+            EnemySpawner(field);
+        }
 
+        public void EnemySpawner(Field field)
+        {
+            const int ENEMY_COUNT = 5;
+            const int ENEMY_INTERVAL = 15000;
+            Thread enemyThread = new Thread(() => {
+                for (int i = 0; i < ENEMY_COUNT; i++)
+                {
+                    Thread.Sleep(ENEMY_INTERVAL);
+                    Enemy enemy = new Enemy(field.Cells, this);
+                    field.AddingEnemies(enemy);
+                    
+                }
+            });
+            enemyThread.Start();
         }
 
     }
@@ -740,11 +748,12 @@ namespace WinFormsMyOPRGame
         public delegate void MoveEventHandler(Enemy enemy, int oldX, int oldY, int newX, int newy);
         public event MoveEventHandler MoveEvent;
         public event EventHandler<EnemyDieEventArgs> EnemyDie;
+        public EnemyBase Base;
         public double HP { get; set; } = 5;
         public int range = 0;
         public double speed { get; set; } = 1.5;
         public virtual char symbol { get; set; } = 'E';
-        public virtual Image img { get; set; } = Properties.Resources.Wall;
+        public virtual Image img { get; set; } = Properties.Resources.Enemy;
         public bool IsAlive => HP > 0;
         public Coordinate position { get; set; }
         Cell[,] field;
@@ -765,11 +774,13 @@ namespace WinFormsMyOPRGame
         };
 
 
-        public Enemy(Cell[,] field)
+        public Enemy(Cell[,] field, EnemyBase _base)
         {
             this.field = field;
+            Base = _base;
             FindPath();
             moving();
+            
         }
 
         protected void Fight(Tower target)
@@ -779,17 +790,12 @@ namespace WinFormsMyOPRGame
 
         public bool FindPath()
         {
-            Coordinate? start = null;
+            Coordinate? start = new Coordinate(Base.X, Base.Y);
             Coordinate? exit = null;
-
+            position = start.Value;
             foreach (var item in field)
             {
-                if (item.GetType() == typeof(EnemyBase))
-                {
-                    start = new Coordinate(item.X, item.Y);
-                    position = start.Value;
-                }
-                else if (item.GetType() == typeof(PlayerBase))
+                if (item.GetType() == typeof(PlayerBase))
                 {
                     exit = new Coordinate(item.X, item.Y);
                 }
