@@ -84,8 +84,9 @@ namespace WinFormsMyOPRGame
         {
             char[][] arrayfield = null;
             ReadLvlInfo(ref arrayfield, lvlID);
-            field = new Field(arrayfield[0].Length, arrayfield.Length);
+            field = new Field(arrayfield[0].Length, arrayfield.Length, drawer);
             field.FillingField(arrayfield);
+            drawer.InitMatrix(field);
             drawer.DrawField(field);
             //
             //drawer.DrawScore(field);
@@ -110,16 +111,16 @@ namespace WinFormsMyOPRGame
             });
             KeysInput.Start();
 
-            Thread renderingThread = new Thread(() => {
-                Drawer drawer = new Drawer(form);
-                const int RENDER_INTERVAL = 1000;
-                while (true)
-                {
-                    drawer.DrawEnemies(field);
-                    Thread.Sleep(RENDER_INTERVAL);
-                }
-            });
-            renderingThread.Start();
+            //Thread renderingThread = new Thread(() => {
+            //    Drawer drawer = new Drawer(form);
+            //    const int RENDER_INTERVAL = 1000;
+            //    while (true)
+            //    {
+            //        //drawer.DrawEnemies(field);
+            //        Thread.Sleep(RENDER_INTERVAL);
+            //    }
+            //});
+            //renderingThread.Start();
         }
 
         public void GamePause()
@@ -149,7 +150,7 @@ namespace WinFormsMyOPRGame
                     field.availableTowers[TowerID - 1].MapElementAtThisPoint = field.Cells[position.X, position.Y];
                     field.Cells[position.X, position.Y] = field.availableTowers[TowerID - 1];
 
-                    drawer.DrawField(field);
+                    //drawer.DrawField(field);
                 }
                 else
                 {
@@ -157,8 +158,6 @@ namespace WinFormsMyOPRGame
                 }
             }
         }
-
-        
 
         private int GetTowerId()
         {
@@ -263,31 +262,42 @@ namespace WinFormsMyOPRGame
     {
         Form form;
         int cellSize = 20;
+        private PictureBox[,] imgMatrix;
+
+
         public Drawer(Form form)
         {
             this.form = form;
         }
 
+        public void InitMatrix(Field field)
+        {
+            imgMatrix = new PictureBox[field.Width, field.Height];
+            for (int i = 0; i < field.Height; i++)
+            {
+                for (int j = 0; j < field.Width; j++)
+                {
+                    imgMatrix[j, i] = new PictureBox();
+                    imgMatrix[j, i].Location = new Point(j * cellSize, i * cellSize);
+                    imgMatrix[j, i].Size = new Size(cellSize, cellSize);
+                    imgMatrix[j, i].SizeMode = PictureBoxSizeMode.Zoom;
+                }
+            }
+        }
+
+
+
         public void DrawField(Field field)
         {
             form.Controls.Clear();
-             // Adjust the size as needed
 
             for (int i = 0; i < field.Height; i++)
             {
                 for (int j = 0; j < field.Width; j++)
                 {
-                    //Label cellLabel = new Label
-                    //{
-                    //    Text = field.Cells[j, i].symbol.ToString(),
-                    //    Location = new Point(j * cellSize, i * cellSize),
-                    //    Size = new Size(cellSize, cellSize),
-                    //    TextAlign = ContentAlignment.MiddleCenter
-                    //};
-                    Image cellImage = field.Cells[j, i].img; // Get the image for the symbol
+                    form.Controls.Add(imgMatrix[j, i]);
+                    Image cellImage = field.Cells[j, i].img;
                     DrawPic(new Coordinate(j, i), cellImage);
-                    
-                    //form.Controls.Add(cellLabel);
                 }
             }
         }
@@ -296,53 +306,49 @@ namespace WinFormsMyOPRGame
         {
             int x = coordinate.X;
             int y = coordinate.Y;
-            PictureBox pictureBox = new PictureBox
-            {
-                Image = cellImage,
-                Location = new Point(x * cellSize, y * cellSize),
-                Size = new Size(cellSize, cellSize),
-                SizeMode = PictureBoxSizeMode.Zoom
-            };
-            if (form.Controls.Contains(pictureBox))
-            {
-                form.Controls.Remove(pictureBox);
-            }
-            form.BeginInvoke(new Action(() =>
-            {
-                form.Controls.Add(pictureBox);
-            }));
+            imgMatrix[x, y].Image = cellImage;
+            imgMatrix[x, y].Invalidate();
+            imgMatrix[x, y].Update();
         }
 
-        public void DrawEnemies(Field field)
+        public void DrawEnemie(Field field, Coordinate was, Coordinate now)
         {
-            //Coordinate currentCursorPosition;
-            form.BeginInvoke(new Action(() =>
-            {
-                form.Controls.Clear();
-            }));
-            
-            for (int i = 0; i < field.Height; i++)
-            {
-                for (int j = 0; j < field.Width; j++)
-                {
-                    //currentCursorPosition = new Coordinate(Console.CursorLeft, Console.CursorTop);
-                    //Console.SetCursorPosition(j, i);
-                    if (field.EnemiesMap[j, i] == null || field.EnemiesMap[j, i].Count == 0)
-                    {
-                        Image cellImage = field.Cells[j, i].img; 
-                        DrawPic(new Coordinate(j, i), cellImage);
-                    }
-                    else
-                    {
-                        Image cellImage = field.EnemiesMap[j, i][field.EnemiesMap[j, i].Count - 1].img;
-                        DrawPic(new Coordinate(j, i), cellImage);
-                        //Console.Write(field.EnemiesMap[j, i][field.EnemiesMap[j, i].Count - 1].symbol);
-                    }
-
-                    //Console.SetCursorPosition(currentCursorPosition.X, currentCursorPosition.Y);
-                }
-            }
+            Image cellImage = field.Cells[was.X, was.Y].img;
+            DrawPic(new Coordinate(was.X, was.Y), cellImage);
+            cellImage = field.EnemiesMap[now.X, now.Y][field.EnemiesMap[now.X, now.Y].Count - 1].img;
+            DrawPic(new Coordinate(now.X, now.Y), cellImage);
         }
+
+        //public void DrawEnemies(Field field)
+        //{
+        //    //Coordinate currentCursorPosition;
+        //    form.BeginInvoke(new Action(() =>
+        //    {
+        //        form.Controls.Clear();
+        //    }));
+            
+        //    for (int i = 0; i < field.Height; i++)
+        //    {
+        //        for (int j = 0; j < field.Width; j++)
+        //        {
+        //            //currentCursorPosition = new Coordinate(Console.CursorLeft, Console.CursorTop);
+        //            //Console.SetCursorPosition(j, i);
+        //            if (field.EnemiesMap[j, i] == null || field.EnemiesMap[j, i].Count == 0)
+        //            {
+        //                Image cellImage = field.Cells[j, i].img; 
+        //                DrawPic(new Coordinate(j, i), cellImage);
+        //            }
+        //            else
+        //            {
+        //                Image cellImage = field.EnemiesMap[j, i][field.EnemiesMap[j, i].Count - 1].img;
+        //                DrawPic(new Coordinate(j, i), cellImage);
+        //                //Console.Write(field.EnemiesMap[j, i][field.EnemiesMap[j, i].Count - 1].symbol);
+        //            }
+
+        //            //Console.SetCursorPosition(currentCursorPosition.X, currentCursorPosition.Y);
+        //        }
+        //    }
+        //}
         // TODO: метод має приймати лише позицію кожного ворога та перемальвувати тільки його. 
 
         public void DrawTowers()
@@ -456,9 +462,9 @@ namespace WinFormsMyOPRGame
         public Tower[] availableTowers;
         public List<Enemy>[,] EnemiesMap;
         public int EnemyCount = 0;
+        Drawer drawer;
 
-
-        public Field(int width, int height)
+        public Field(int width, int height, Drawer _drawer)
         {
             availableTowers = new Tower[] {
                 new StrongTower(-1, -1, this),
@@ -467,6 +473,7 @@ namespace WinFormsMyOPRGame
             };
             Width = width;
             Height = height;
+            drawer = _drawer;
             Cells = new Cell[width, height];
             EnemiesMap = new List<Enemy>[Cells.GetLength(0), Cells.GetLength(1)];
             for (int i = 0; i < Cells.GetLength(0); i++)
@@ -515,6 +522,11 @@ namespace WinFormsMyOPRGame
             enemy.EnemyDie += EnemyDie;
             EnemiesMap[x, y].Add(enemy);
         }
+        public bool BoundsCheck(Coordinate coord)
+        {
+            return (coord.X >= 0 && coord.X < Cells.GetLength(0) &&
+                    coord.Y >= 0 && coord.Y < Cells.GetLength(1));
+        }
 
         public List<Enemy> GetCellsInRange(Cell centerCell, int range)
         {
@@ -544,10 +556,11 @@ namespace WinFormsMyOPRGame
             return cellsInRange;
         }
 
-        public void MoveEnemy(Enemy enemy, int oldX, int oldY, int newX, int newY)
+        public void MoveEnemy(Enemy enemy, Coordinate old, Coordinate now)
         {
             EnemiesMap[enemy.position.X, enemy.position.Y].Remove(enemy);
-            EnemiesMap[newX, newY].Add(enemy);
+            EnemiesMap[now.X, now.Y].Add(enemy);
+            drawer.DrawEnemie(this, old, now);
         }
 
         private void EnemyDie(object sender, EnemyDieEventArgs e)
@@ -614,10 +627,10 @@ namespace WinFormsMyOPRGame
             Thread enemyThread = new Thread(() => {
                 for (int i = 0; i < ENEMY_COUNT; i++)
                 {
-                    Thread.Sleep(ENEMY_INTERVAL);
-                    Enemy enemy = new Enemy(field.Cells, this);
-                    field.AddingEnemies(enemy);
                     
+                    Enemy enemy = new Enemy(field, this);
+                    field.AddingEnemies(enemy);
+                    Thread.Sleep(ENEMY_INTERVAL);
                 }
             });
             enemyThread.Start();
@@ -745,7 +758,7 @@ namespace WinFormsMyOPRGame
 
     class Enemy
     {
-        public delegate void MoveEventHandler(Enemy enemy, int oldX, int oldY, int newX, int newy);
+        public delegate void MoveEventHandler(Enemy enemy, Coordinate old, Coordinate now);
         public event MoveEventHandler MoveEvent;
         public event EventHandler<EnemyDieEventArgs> EnemyDie;
         public EnemyBase Base;
@@ -756,7 +769,7 @@ namespace WinFormsMyOPRGame
         public virtual Image img { get; set; } = Properties.Resources.Enemy;
         public bool IsAlive => HP > 0;
         public Coordinate position { get; set; }
-        Cell[,] field;
+        Field field;
         List<Coordinate> path = new List<Coordinate>();
         enum Move
         {
@@ -774,13 +787,13 @@ namespace WinFormsMyOPRGame
         };
 
 
-        public Enemy(Cell[,] field, EnemyBase _base)
+        public Enemy(Field field, EnemyBase _base)
         {
             this.field = field;
             Base = _base;
             FindPath();
             moving();
-            
+
         }
 
         protected void Fight(Tower target)
@@ -793,7 +806,7 @@ namespace WinFormsMyOPRGame
             Coordinate? start = new Coordinate(Base.X, Base.Y);
             Coordinate? exit = null;
             position = start.Value;
-            foreach (var item in field)
+            foreach (var item in field.Cells)
             {
                 if (item.GetType() == typeof(PlayerBase))
                 {
@@ -822,7 +835,7 @@ namespace WinFormsMyOPRGame
                 {
                     pathFound = true;
                     break;
-                    //TODO: переробити через флаг та break
+                    //+++TODO: переробити через флаг та break
                 }
 
                 foreach (var direction in directions) //+++TODO: бігати одразу по Directions
@@ -832,12 +845,10 @@ namespace WinFormsMyOPRGame
                         current.Value.Y + direction.Value.Y
                     );
 
-                    if (next != null &&
-                        next.Value.X >= 0 && next.Value.X < field.GetLength(0) &&
-                        next.Value.Y >= 0 && next.Value.Y < field.GetLength(1))
-                    //TODO: винести перевірку меж поля в окрему функцію
+                    if (next != null && field.BoundsCheck(next.Value))
+                    //+++TODO: винести перевірку меж поля в окрему функцію
                     {
-                        Cell nextCell = field[next.Value.X, next.Value.Y];
+                        Cell nextCell = field.Cells[next.Value.X, next.Value.Y];
                         if (!parent.ContainsKey(next) && !next.Equals(start) && nextCell.CanGo)
                         {
                             //visited.Add(next);
@@ -877,19 +888,19 @@ namespace WinFormsMyOPRGame
                 while (true)
                 {
                     await Task.Delay((int)(BASE_MOTION_DELAY / speed));
-                    if (field[point.X, point.Y].GetType() == typeof(Space) ||
-                        field[point.X, point.Y].GetType() == typeof(EnemyBase))
+                    if (field.Cells[point.X, point.Y].GetType() == typeof(Space) ||
+                        field.Cells[point.X, point.Y].GetType() == typeof(EnemyBase))
                     {
-                        MoveEvent?.Invoke(this, position.X, position.Y, point.X, point.Y);
+                        MoveEvent?.Invoke(this, position, point);
                         position = point;
 
                         break;
                     }
-                    else if (field[point.X, point.Y].GetType() == typeof(Tower))
+                    else if (field.Cells[point.X, point.Y].GetType() == typeof(Tower))
                     {
 
                     }
-                    else if (field[point.X, point.Y].GetType() == typeof(PlayerBase))
+                    else if (field.Cells[point.X, point.Y].GetType() == typeof(PlayerBase))
                     {
                         OnEnemyDie(new EnemyDieEventArgs(this));
                     }
@@ -910,6 +921,7 @@ namespace WinFormsMyOPRGame
             EnemyDie?.Invoke(this, e);
         }
     }
+
     static class Program
     {
         /// <summary>
