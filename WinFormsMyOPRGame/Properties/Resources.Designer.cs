@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WinFormsMyOPRGame.Properties {
+namespace MyOPRGame.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace WinFormsMyOPRGame.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("WinFormsMyOPRGame.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MyOPRGame.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -97,6 +97,24 @@ namespace WinFormsMyOPRGame.Properties {
             get {
                 object obj = ResourceManager.GetObject("LoseScreen", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ############################X###########
+        ///#####0000000###0000000#####00####!00000#
+        ///##0000#########0#####0#####0000#####0#0#
+        ///##0000000000000000##000000000#0#####0#0#
+        ///##0000#####0############0####00#####0#0#
+        ///##00###0###0##########000###########0#0#
+        ///##000000###000000000000#0000000000000#0#
+        ///#######0###########0######000###0000000#
+        ///##000##!000000000##0######000###########
+        ///########################################.
+        /// </summary>
+        internal static string lvl1 {
+            get {
+                return ResourceManager.GetString("lvl1", resourceCulture);
             }
         }
         

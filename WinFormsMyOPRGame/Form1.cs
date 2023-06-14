@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace WinFormsMyOPRGame
+namespace MyOPRGame
 {
     public partial class Form1 : Form
     {
@@ -18,7 +18,26 @@ namespace WinFormsMyOPRGame
 
             this.DoubleBuffered = true;
             this.FormClosing += Form1_FormClosing;
+            //KeyPreview = true;
+
         }
+
+        //protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        //{
+        //    // Check if the active control is a button
+        //    if (ActiveControl is Button)
+        //    {
+        //        // Check for the keys you want to disable (e.g., arrow keys and Enter)
+        //        if (keyData == Keys.Left || keyData == Keys.Right || keyData == Keys.Up || keyData == Keys.Down || keyData == Keys.Enter)
+        //        {
+        //            // Return true to indicate that the key has been handled and should not be processed further
+        //            return true;
+        //        }
+        //    }
+
+        //    // Call the base implementation for normal processing of other keys
+        //    return base.ProcessCmdKey(ref msg, keyData);
+        //}
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {

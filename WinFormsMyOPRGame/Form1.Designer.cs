@@ -1,5 +1,5 @@
 ﻿
-namespace WinFormsMyOPRGame
+namespace MyOPRGame
 {
     partial class Form1
     {

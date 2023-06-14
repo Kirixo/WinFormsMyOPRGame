@@ -1,0 +1,210 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="MyOPRGame.Game">
+    <Position X="5.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAQAAgABQAAAAAAIAAAAAAAAAA=</HashCode>
+      <FileName>GameProcess.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MyOPRGame.GameProcess">
+    <Position X="7.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAGAAAAAAAAABAAAAIAAEAAIASAACAAQAAAAAAAAAAg=</HashCode>
+      <FileName>GameProcess.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MyOPRGame.Enemy">
+    <Position X="9" Y="0.5" Width="2.75" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Delegate Name="MyOPRGame.Enemy.MoveEventHandler">
+        <TypeIdentifier>
+          <NewMemberFileName>Enemy.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Enum Name="MyOPRGame.Enemy.Move" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Enemy.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AQGoAAAIAAAYEgAAAAQCIAAAQAIEAYAAAAAAAAAgQAA=</HashCode>
+      <FileName>Enemy.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MyOPRGame.EnemyDieEventArgs">
+    <Position X="12" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Enemy.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MyOPRGame.Drawer">
+    <Position X="5.5" Y="3" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="MyOPRGame.Drawer.nonFocusedButton">
+        <TypeIdentifier>
+          <NewMemberFileName>Drawer.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AQAAAQAAAQAAAQIQAAAIYQAAAAAAAAAAAACIAAAAAQI=</HashCode>
+      <FileName>Drawer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MyOPRGame.UserInput">
+    <Position X="7.25" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAgAAAAABAABAAAAAAAAAQAAAAAAAAAIgAAAAAA=</HashCode>
+      <FileName>UserInput.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MyOPRGame.Form1">
+    <Position X="12" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAACAAAACAAAAAAAAAAAIAAAAAAA=</HashCode>
+      <FileName>Form1.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MyOPRGame.Field">
+    <Position X="3.75" Y="0.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Delegate Name="MyOPRGame.Field.GameStatus" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Field.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAEAAAABBAAAAkAAEAIAEcBFAQgAQABAAAAAAIAAIAA=</HashCode>
+      <FileName>Field.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MyOPRGame.Program">
+    <Position X="12" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Program.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MyOPRGame.Menu">
+    <Position X="3.75" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAABAAAAAIAAAABAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Menu.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MyOPRGame.MainMenu">
+    <Position X="5.5" Y="10" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Menu.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MyOPRGame.SideMenu">
+    <Position X="3.75" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAEAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Menu.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MenuSelector">
+    <Position X="7.5" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MenuSelector.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MyOPRGame.Cell">
+    <Position X="17.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAAAAAAEAAAAAAAAAAAAAAAAACAAABAAQAAYAA=</HashCode>
+      <FileName>Cells.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MyOPRGame.Space">
+    <Position X="18.25" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAAAAAAEAAAAAAAAAAAAAAAAACAAAAAAQAAAAA=</HashCode>
+      <FileName>Cells.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MyOPRGame.Wall">
+    <Position X="20" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAAAAAAEAAAAAAAAAAAAAAAAACAAAAAAQAAAAA=</HashCode>
+      <FileName>Cells.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MyOPRGame.Base">
+    <Position X="15.25" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Cells.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MyOPRGame.EnemyBase">
+    <Position X="14.25" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIgAAAAAAAEAAAAAAAAAAACAAAAACAAABAAQAAAAA=</HashCode>
+      <FileName>Cells.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MyOPRGame.PlayerBase">
+    <Position X="16.5" Y="5.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Delegate Name="MyOPRGame.PlayerBase.PlayerLost" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Cells.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAIACAAAAAAEAAAAAAAAIAAAAAAAACCAAAAAQAAAAA=</HashCode>
+      <FileName>Cells.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MyOPRGame.Tower">
+    <Position X="24.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gACAAAAAAAAICAAQAAQAAABAQAIBgAAAAABAAQAAAAA=</HashCode>
+      <FileName>Towers.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MyOPRGame.StrongTower">
+    <Position X="24.25" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAAAAAAEAAAAAAAAAAAAAAAgAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Towers.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MyOPRGame.RangeTower">
+    <Position X="22" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAAAAAAEAAAAAAAAAAAAAAAgAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Towers.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MyOPRGame.StrongRangeTower">
+    <Position X="26.5" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAAAAAAEAAAAAAAAAAAAAAAgAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Towers.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
