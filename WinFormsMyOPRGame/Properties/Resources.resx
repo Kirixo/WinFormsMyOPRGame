@@ -124,6 +124,12 @@
   <data name="Floor" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Floor.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="LoseScreen" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\LoseScreen.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Portal" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Portal.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -133,6 +139,18 @@
   <data name="Portal2" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Portal2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="RangeTower" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\RangeTower.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="StrongRangeTower" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\StrongRangeTower.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="StrongTower" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\StrongTower.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Tower1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Tower1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Wall" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Wall.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -141,5 +159,8 @@
   </data>
   <data name="Wall3" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Wall3.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="WinScreen" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\WinScreen.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

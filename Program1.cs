@@ -31,8 +31,7 @@ namespace WinFormsMyOPRGame
         protected Dictionary<string, Action> menuItems;
 
 
-        public Game(in Form form)
-        {
+        public Game(in Form form) { 
             this.form = form;
             menuItems = new Dictionary<string, Action>()
             {
@@ -59,6 +58,7 @@ namespace WinFormsMyOPRGame
         Form form;
         Field field;
         Drawer drawer;
+        Thread userPrompts;
         private ManualResetEvent pauseEvent = new ManualResetEvent(true);
 
 
@@ -87,24 +87,18 @@ namespace WinFormsMyOPRGame
             field = new Field(arrayfield[0].Length, arrayfield.Length, drawer);
             field.FillingField(arrayfield);
             drawer.InitMatrix(field);
-            field.InitPauseEvent(pauseEvent);
-            field.PlayerLostEvent += PlayerLost;
-            field.PlayerWonEvent += PlayerWon;
             drawer.DrawField(field);
-            drawer.DrawTowerSelectBox(field);
             //
             //drawer.DrawScore(field);
             //Для генерації ворогів десь повинна бути окрема функція
+            
 
-
-            Thread userPrompts = new Thread(() =>
-            {
+            userPrompts = new Thread(() => {
                 Gaming();
             });
             userPrompts.Start();
 
-            Thread KeysInput = new Thread(() =>
-            {
+            Thread KeysInput = new Thread(() => {
                 /*
                 Thread.Sleep(2);
                 while (true)
@@ -131,7 +125,7 @@ namespace WinFormsMyOPRGame
 
         public void GamePause()
         {
-            pauseEvent.Reset();
+            //Console.WriteLine("XXXXXXXXXX");
         }
         public void ResumeGame()
         {
@@ -140,29 +134,29 @@ namespace WinFormsMyOPRGame
 
         public void Gaming()
         {
-            //while (true)
-            //{
-            //    Console.WriteLine($"Select Tower that you want to set.");
-            //    int TowerID = GetTowerId();
-            //    Coordinate position = GetCoordinate();
-            //    if (IsValidPosition(position, TowerID))
-            //    {
-            //        if (field.availableTowers[TowerID - 1].X != -1)
-            //        {
-            //            field.Cells[field.availableTowers[TowerID - 1].X, field.availableTowers[TowerID - 1].Y] = field.availableTowers[TowerID - 1].MapElementAtThisPoint;
-            //        }
-            //        field.availableTowers[TowerID - 1].X = position.X;
-            //        field.availableTowers[TowerID - 1].Y = position.Y;
-            //        field.availableTowers[TowerID - 1].MapElementAtThisPoint = field.Cells[position.X, position.Y];
-            //        field.Cells[position.X, position.Y] = field.availableTowers[TowerID - 1];
+            while (true)
+            {
+                Console.WriteLine($"Select Tower that you want to set.");
+                int TowerID = GetTowerId();
+                Coordinate position = GetCoordinate();
+                if (IsValidPosition(position, TowerID))
+                {
+                    if (field.availableTowers[TowerID - 1].X != -1)
+                    {
+                        field.Cells[field.availableTowers[TowerID - 1].X, field.availableTowers[TowerID - 1].Y] = field.availableTowers[TowerID - 1].MapElementAtThisPoint;
+                    }
+                    field.availableTowers[TowerID - 1].X = position.X;
+                    field.availableTowers[TowerID - 1].Y = position.Y;
+                    field.availableTowers[TowerID - 1].MapElementAtThisPoint = field.Cells[position.X, position.Y];
+                    field.Cells[position.X, position.Y] = field.availableTowers[TowerID - 1];
 
-            //        drawer.DrawCeil(field, position);
-            //    }
-            //    else
-            //    {
-            //        Console.WriteLine($"Ceil {position.X}, {position.Y} does not exist. Please select available coordinates.");
-            //    }
-            //}
+                    //drawer.DrawField(field);
+                }
+                else
+                {
+                    Console.WriteLine($"Ceil {position.X}, {position.Y} does not exist. Please select available coordinates.");
+                }
+            }
         }
 
         private int GetTowerId()
@@ -262,20 +256,6 @@ namespace WinFormsMyOPRGame
                 Console.SetCursorPosition(0, currentLineCursor);
             }
         }
-
-        public void PlayerLost()
-        {
-            GamePause();
-            Thread.Sleep(1000);
-            drawer.DrawLost();
-        }
-
-        public void PlayerWon()
-        {
-            GamePause();
-            Thread.Sleep(1000);
-            drawer.DrawWin();
-        }
     }
 
     class Drawer
@@ -283,8 +263,7 @@ namespace WinFormsMyOPRGame
         Form form;
         int cellSize = 20;
         private PictureBox[,] imgMatrix;
-        //private PictureBox[,] imgMatrix2;
-        //private static Semaphore semaphore = new Semaphore(1, 1);
+        private static Semaphore semaphore = new Semaphore(1, 1);
 
 
         public Drawer(Form form)
@@ -305,18 +284,6 @@ namespace WinFormsMyOPRGame
                     imgMatrix[j, i].SizeMode = PictureBoxSizeMode.Zoom;
                 }
             }
-
-            //imgMatrix2 = new PictureBox[field.Width, field.Height];
-            //for (int i = 0; i < field.Height; i++)
-            //{
-            //    for (int j = 0; j < field.Width; j++)
-            //    {
-            //        imgMatrix2[j, i] = new PictureBox();
-            //        imgMatrix2[j, i].Location = new Point(j * cellSize, i * cellSize);
-            //        imgMatrix2[j, i].Size = new Size(cellSize, cellSize);
-            //        imgMatrix2[j, i].SizeMode = PictureBoxSizeMode.Zoom;
-            //    }
-            //}
         }
 
 
@@ -330,11 +297,9 @@ namespace WinFormsMyOPRGame
                 for (int j = 0; j < field.Width; j++)
                 {
                     form.Controls.Add(imgMatrix[j, i]);
-                    //form.Controls.Add(imgMatrix2[j, i]);
                     Image cellImage = field.Cells[j, i].img;
                     DrawPic(new Coordinate(j, i), cellImage);
                 }
-
             }
         }
 
@@ -348,45 +313,7 @@ namespace WinFormsMyOPRGame
             {
                 imgMatrix[x, y].Update();
             }));
-
-        }
-
-        //private void DrawPic(Coordinate coordinate, Image cellImage)
-        //{
-        //    int x = coordinate.X;
-        //    int y = coordinate.Y;
             
-        //    imgMatrix2[x, y].Image = cellImage;
-        //    imgMatrix2[x, y].Invalidate();
-        //    form.Invoke(new Action(() =>
-        //    {
-        //        imgMatrix2[x, y].BringToFront();
-        //        imgMatrix2[x, y].Update();
-        //    }));
-
-        //}
-
-        public void DrawTowerSelectBox(Field field)
-        {
-            const int TAB = 20; 
-            for (int i = 0; i < field.availableTowers.Length; i++)
-            {
-                Button button = new Button();
-                    
-                
-                button.Location = new Point((TAB + 60) * i + TAB, field.Height * cellSize + TAB);
-                button.Size = new Size(60, 60);
-                button.Image = field.availableTowers[i].img.GetThumbnailImage(button.Width-10, button.Height-10, null, IntPtr.Zero); ;
-                Random random = new Random();
-                int towerID = i;
-                button.Click += (sender, e) => {
-                    
-                    field.InstallTower(towerID, new Coordinate(random.Next(0, field.Width - 1), random.Next(0, field.Height - 1)));
-                };
-                form.Controls.Add(button);
-                
-                //buttonTop += button.Height + 10;
-            }
         }
 
         public void DrawEnemie(Field field, Coordinate was, Coordinate now)
@@ -395,11 +322,7 @@ namespace WinFormsMyOPRGame
             DrawPic(new Coordinate(was.X, was.Y), cellImage);
             Image cellImage2 = field.EnemiesMap[now.X, now.Y][field.EnemiesMap[now.X, now.Y].Count - 1].img;
             DrawPic(new Coordinate(now.X, now.Y), cellImage2);
-
-
-
-
-
+            
         }
 
         public void DrawCeil(Field field, Coordinate coord)
@@ -414,10 +337,39 @@ namespace WinFormsMyOPRGame
                 Image cellImage2 = field.EnemiesMap[coord.X, coord.Y][field.EnemiesMap[coord.X, coord.Y].Count - 1].img;
                 DrawPic(new Coordinate(coord.X, coord.Y), cellImage2);
             }
-
-
         }
 
+        //public void drawenemies(field field)
+        //{
+        //    //coordinate currentcursorposition;
+        //    form.begininvoke(new action(() =>
+        //    {
+        //        form.controls.clear();
+        //    }));
+
+        //    for (int i = 0; i < field.height; i++)
+        //    {
+        //        for (int j = 0; j < field.width; j++)
+        //        {
+        //            //currentcursorposition = new coordinate(console.cursorleft, console.cursortop);
+        //            //console.setcursorposition(j, i);
+        //            if (field.enemiesmap[j, i] == null || field.enemiesmap[j, i].count == 0)
+        //            {
+        //                image cellimage = field.cells[j, i].img; 
+        //                drawpic(new coordinate(j, i), cellimage);
+        //            }
+        //            else
+        //            {
+        //                image cellimage = field.enemiesmap[j, i][field.enemiesmap[j, i].count - 1].img;
+        //                drawpic(new coordinate(j, i), cellimage);
+        //                //console.write(field.enemiesmap[j, i][field.enemiesmap[j, i].count - 1].symbol);
+        //            }
+
+        //            //console.setcursorposition(currentcursorposition.x, currentcursorposition.y);
+        //        }
+        //    }
+        //}
+        // TODO: метод має приймати лише позицію кожного ворога та перемальвувати тільки його. 
 
         public void DrawTowers()
         {
@@ -436,65 +388,11 @@ namespace WinFormsMyOPRGame
                 button.Top = buttonTop;
                 button.Left = 10;
                 button.Width = 200;
-                button.Click += (sender, e) => menu.MenuItems[item].Invoke();
-                form.Controls.Add(button);
+                button.Click += (sender, e) => menu.MenuItems[item].Invoke(); 
+                form.Controls.Add(button); 
 
                 buttonTop += button.Height + 10;
             }
-        }
-
-        public void DrawLost()
-        {
-            form.Invoke(new Action(() =>
-            {
-                form.Controls.Clear();
-            }));
-            PictureBox picture = new PictureBox
-            {
-                Size = new Size(form.Width, form.Height),
-                SizeMode = PictureBoxSizeMode.StretchImage
-            };
-            Image gifImage = Properties.Resources.LoseScreen;
-            picture.Image = gifImage;
-            form.Invoke(new Action(() =>
-            {
-                form.Controls.Add(picture);
-                //ImageAnimator.Animate(gifImage, (sender, e) =>
-                //{
-                //    picture.Invalidate();
-                //});
-            }));
-        }
-
-        public void DrawWin()
-        {
-            form.Invoke(new Action(() =>
-            {
-                form.Controls.Clear();
-            }));
-            PictureBox picture = new PictureBox
-            {
-                Size = new Size(form.Width, form.Height),
-                SizeMode = PictureBoxSizeMode.StretchImage
-            };
-            Image gifImage = Properties.Resources.WinScreen;
-            picture.Image = gifImage;
-            form.Invoke(new Action(() =>
-            {
-                form.Controls.Add(picture);
-                ImageAnimator.Animate(gifImage, (sender, e) =>
-                {
-                    picture.Invalidate();
-                });
-            }));
-
-            //Console.Clear();
-            //Console.WriteLine("██░░░░░░██░░░░██████░░░░██░░░░░░██░░░░░░░░██░░░░░░██░░░░██████░░░░███░░░░░██");
-            //Console.WriteLine("██░░░░░░██░░██░░░░░░██░░██░░░░░░██░░░░░░░░██░░░░░░██░░██░░░░░░██░░████░░░░██");
-            //Console.WriteLine("░░██░░██░░░░██░░░░░░██░░██░░░░░░██░░░░░░░░██░░░░░░██░░██░░░░░░██░░██░░██░░██");
-            //Console.WriteLine("░░░░██░░░░░░██░░░░░░██░░██░░░░░░██░░░░░░░░██░░██░░██░░██░░░░░░██░░██░░░██░██");
-            //Console.WriteLine("░░░░██░░░░░░██░░░░░░██░░██░░░░░░██░░░░░░░░██░░██░░██░░██░░░░░░██░░██░░░░░███");
-            //Console.WriteLine("░░░░██░░░░░░░░██████░░░░░░██████░░░░░░░░░░░░██░░██░░░░░░██████░░░░██░░░░░░██");
         }
 
         public void DrawScore(Field field)
@@ -536,6 +434,16 @@ namespace WinFormsMyOPRGame
             drawer.DrawMenu(this);
             MenuItems = _menuItems;
         }
+
+        protected int SelectMenuItem()
+        {
+            return 0;
+        }
+
+        protected void Exit()
+        {
+            Environment.Exit(0);
+        }
     }
 
     class MainMenu : Menu
@@ -573,37 +481,16 @@ namespace WinFormsMyOPRGame
         public Cell[,] Cells = null;
         public Tower[] availableTowers;
         public List<Enemy>[,] EnemiesMap;
-        public delegate void GameStatus();
-        public event GameStatus PlayerLostEvent;
-        public event GameStatus PlayerWonEvent;
-        public ManualResetEvent PauseEvent;
-        public int TotalEnemyCount { get; set; } = 0;
+        public int EnemyCount = 0;
         Drawer drawer;
-        private int _remainingEnemyCount;
-        int RemainingEnemyCount
-        {
-            get
-            {
-                return _remainingEnemyCount;
-            }
-            set
-            {
-                if (value <= 0)
-                {
-                    PlayerWonEvent.Invoke();
-                }
-                _remainingEnemyCount = value;
-            }
-        }
-
 
         public Field(int width, int height, Drawer _drawer)
         {
             availableTowers = new Tower[] {
-                    new StrongTower(-1, -1, this),
-                    new RangeTower(-1, -1, this),
-                    new StrongRangeTower(-1, -1, this)
-                };
+                new StrongTower(-1, -1, this),
+                new RangeTower(-1, -1, this),
+                new StrongRangeTower(-1, -1, this)
+            };
             Width = width;
             Height = height;
             drawer = _drawer;
@@ -634,13 +521,9 @@ namespace WinFormsMyOPRGame
                             break;
                         case '!':
                             Cells[j, i] = new EnemyBase(j, i, this);
-                            TotalEnemyCount += ((EnemyBase)Cells[j, i]).ENEMY_COUNT;
                             break;
                         case 'X':
-                            PlayerBase playerBase = new PlayerBase(j, i);
-                            playerBase.PlayerLostEvent += () => PlayerLostEvent.Invoke();
-                            Cells[j, i] = playerBase;
-
+                            Cells[j, i] = new PlayerBase(j, i);
                             break;
                         default:
                             //Console.WriteLine($"Developer is stupid. As always. Ceil ({inputfield[i][j]}) does not exist, so at ({j + 1},{Height - i}) will be wall!");
@@ -649,12 +532,6 @@ namespace WinFormsMyOPRGame
                     }
                 }
             }
-            RemainingEnemyCount = TotalEnemyCount;
-        }
-
-        public void InitPauseEvent(ManualResetEvent pauseEvent)
-        {
-            PauseEvent = pauseEvent;
         }
 
         public void AddingEnemies(Enemy enemy)
@@ -663,30 +540,12 @@ namespace WinFormsMyOPRGame
             int y = enemy.Base.Y;
             enemy.MoveEvent += MoveEnemy;
             enemy.EnemyDie += EnemyDie;
-            enemy.SetPauseEvent(PauseEvent);
-            enemy.moving();
             EnemiesMap[x, y].Add(enemy);
         }
-
         public bool BoundsCheck(Coordinate coord)
         {
             return (coord.X >= 0 && coord.X < Cells.GetLength(0) &&
                     coord.Y >= 0 && coord.Y < Cells.GetLength(1));
-        }
-
-        public void InstallTower(int TowerID, Coordinate position)
-        {
-            if (availableTowers[TowerID].X != -1)
-            {
-                Cells[availableTowers[TowerID].X, availableTowers[TowerID].Y] = availableTowers[TowerID].MapElementAtThisPoint;
-                drawer.DrawCeil(this, new Coordinate(availableTowers[TowerID].X, availableTowers[TowerID].Y));
-            }
-            availableTowers[TowerID].X = position.X;
-            availableTowers[TowerID].Y = position.Y;
-            availableTowers[TowerID].MapElementAtThisPoint = Cells[position.X, position.Y];
-            Cells[position.X, position.Y] = availableTowers[TowerID];
-
-            drawer.DrawCeil(this, position);
         }
 
         public List<Enemy> GetCellsInRange(Cell centerCell, int range)
@@ -731,7 +590,6 @@ namespace WinFormsMyOPRGame
             int y = enemy.position.Y;
             EnemiesMap[x, y].Remove(enemy);
             drawer.DrawCeil(this, new Coordinate(x, y));
-            RemainingEnemyCount--;
         }
     }
 
@@ -742,7 +600,7 @@ namespace WinFormsMyOPRGame
         public virtual ConsoleColor color { get; set; }
         public virtual bool CanGo { get; set; }
         public virtual char symbol { get; set; }
-        public virtual Image img => Properties.Resources.Wall; //////////
+        public virtual Image img => Properties.Resources.Wall2; //////////
 
 
         protected Cell(int posX, int posY)
@@ -776,8 +634,6 @@ namespace WinFormsMyOPRGame
         public override char symbol => '!';
         public override ConsoleColor color => ConsoleColor.Red;
         public override Image img => Properties.Resources.Portal1;
-        public int ENEMY_COUNT = 5;
-        public int ENEMY_INTERVAL = 15000;
 
         public EnemyBase(int posX, int posY, Field field) : base(posX, posY)
         {
@@ -786,11 +642,12 @@ namespace WinFormsMyOPRGame
 
         public void EnemySpawner(Field field)
         {
-            Thread enemyThread = new Thread(() =>
-            {
+            const int ENEMY_COUNT = 5;
+            const int ENEMY_INTERVAL = 15000;
+            Thread enemyThread = new Thread(() => {
                 for (int i = 0; i < ENEMY_COUNT; i++)
                 {
-
+                    
                     Enemy enemy = new Enemy(field, this);
                     field.AddingEnemies(enemy);
                     Thread.Sleep(ENEMY_INTERVAL);
@@ -803,27 +660,13 @@ namespace WinFormsMyOPRGame
 
     class PlayerBase : Base
     {
-        public delegate void PlayerLost();
-        public event PlayerLost PlayerLostEvent;
         public override bool CanGo => true;
         public override char symbol => '~';
         public override ConsoleColor color => ConsoleColor.Blue;
         public override Image img => Properties.Resources.Portal2;
-        public int Lives { get; set; } = 1;
-
 
         public PlayerBase(int posX, int posY) : base(posX, posY)
         {
-        }
-
-        public void LivesDecrement(int decrementValue)
-        {
-            Lives -= decrementValue;
-            if (Lives <= 0)
-            {
-                PlayerLostEvent.Invoke();
-            }
-
         }
     }
 
@@ -890,7 +733,6 @@ namespace WinFormsMyOPRGame
     class StrongTower : Tower
     {
         public override char symbol => 'S';
-        public override Image img => Properties.Resources.StrongTower;
 
 
         public StrongTower(int posX, int posY, Field field) : base(posX, posY, field)
@@ -903,7 +745,6 @@ namespace WinFormsMyOPRGame
     class RangeTower : Tower
     {
         public override char symbol => 'R';
-        public override Image img => Properties.Resources.RangeTower;
 
 
         public RangeTower(int posX, int posY, Field field) : base(posX, posY, field)
@@ -916,7 +757,6 @@ namespace WinFormsMyOPRGame
     class StrongRangeTower : Tower
     {
         public override char symbol => 'U';
-        public override Image img => Properties.Resources.StrongRangeTower;
 
 
         public StrongRangeTower(int posX, int posY, Field field) : base(posX, posY, field)
@@ -943,7 +783,6 @@ namespace WinFormsMyOPRGame
         public delegate void MoveEventHandler(Enemy enemy, Coordinate old, Coordinate now);
         public event MoveEventHandler MoveEvent;
         public event EventHandler<EnemyDieEventArgs> EnemyDie;
-        private ManualResetEvent pauseEvent;
         public EnemyBase Base;
         public double HP { get; set; } = 5;
         public int range = 0;
@@ -962,12 +801,12 @@ namespace WinFormsMyOPRGame
             right
         }
         Dictionary<Move, Coordinate> directions = new Dictionary<Move, Coordinate>()
-            {
-                { Move.up, new Coordinate(0, -1) },
-                { Move.left, new Coordinate(-1, 0) },
-                { Move.down, new Coordinate(0, 1) },
-                { Move.right, new Coordinate(1, 0) }
-            };
+        {
+            { Move.up, new Coordinate(0, -1) },
+            { Move.left, new Coordinate(-1, 0) },
+            { Move.down, new Coordinate(0, 1) },
+            { Move.right, new Coordinate(1, 0) }
+        };
 
 
         public Enemy(Field field, EnemyBase _base)
@@ -975,12 +814,8 @@ namespace WinFormsMyOPRGame
             this.field = field;
             Base = _base;
             FindPath();
+            moving();
 
-        }
-
-        public void SetPauseEvent(ManualResetEvent pauseEvent)
-        {
-            this.pauseEvent = pauseEvent;
         }
 
         protected void Fight(Tower target)
@@ -1074,10 +909,7 @@ namespace WinFormsMyOPRGame
             {
                 while (true)
                 {
-                    pauseEvent.WaitOne();
                     await Task.Delay((int)(BASE_MOTION_DELAY / speed));
-
-
                     if (field.Cells[point.X, point.Y].GetType() == typeof(Space) ||
                         field.Cells[point.X, point.Y].GetType() == typeof(EnemyBase))
                     {
@@ -1093,13 +925,11 @@ namespace WinFormsMyOPRGame
                     else if (field.Cells[point.X, point.Y].GetType() == typeof(PlayerBase))
                     {
                         OnEnemyDie(new EnemyDieEventArgs(this));
-                        ((PlayerBase)field.Cells[point.X, point.Y]).LivesDecrement(1);
-
                     }
                 }
             }
-        }
 
+        }
         public void TakingDamage(int Damage)
         {
             HP -= Damage;
@@ -1108,7 +938,6 @@ namespace WinFormsMyOPRGame
                 OnEnemyDie(new EnemyDieEventArgs(this));
             }
         }
-
         protected virtual void OnEnemyDie(EnemyDieEventArgs e)
         {
             EnemyDie?.Invoke(this, e);
@@ -1130,11 +959,11 @@ namespace WinFormsMyOPRGame
             Form1 form = new Form1();
             form.Icon = Properties.Resources.Icon;
             Game newGame = new Game(form); // Передача ссылки на форму в конструктор Game
-
+            
             form.Show(); // Отображение формы
             Application.Run(form);
 
-
+            
         }
     }
 }
