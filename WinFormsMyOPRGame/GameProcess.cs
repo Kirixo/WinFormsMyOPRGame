@@ -92,6 +92,12 @@ namespace MyOPRGame
         void FieldCreation(int lvlID)
         {
             char[][] arrayfield = null;
+            if(lvlID < 0)
+            {
+                MapGenerator mapGenerator = new MapGenerator(40, 10);
+                mapGenerator.Generate();
+                arrayfield = mapGenerator.ReField;
+            }
             ReadLvlInfo(ref arrayfield, lvlID);
             field = new Field(arrayfield[0].Length, arrayfield.Length, drawer);
             field.FillingField(arrayfield);

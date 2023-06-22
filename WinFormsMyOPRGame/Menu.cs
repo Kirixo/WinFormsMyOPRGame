@@ -18,9 +18,10 @@ namespace MyOPRGame
 
         public Menu(Drawer drawer, Dictionary<string, Action> _menuItems)
         {
+            MenuSelector menuSelector = new MenuSelector();
             drawer.DrawMenu(this);
             MenuItems = _menuItems;
-            int optionID = MenuSelector.SelectMenuItem(OptionsList);
+            int optionID = menuSelector.SelectMenuItem(OptionsList, drawer);
             if (optionID >= 0)
             {
                 OptionChecker(OptionsList[optionID]);

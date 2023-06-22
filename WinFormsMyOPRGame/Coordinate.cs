@@ -1,4 +1,6 @@
-﻿public struct Coordinate
+﻿using System;
+
+public struct Coordinate
 {
     public int X;
     public int Y;
@@ -8,5 +10,10 @@
     {
         X = x;
         Y = y;
+    }
+
+    public int Distance(Coordinate pointB)
+    {
+        return (int)Math.Sqrt((X-pointB.X)*(X-pointB.X) + (Y-pointB.Y)*(Y-pointB.Y));
     }
 }

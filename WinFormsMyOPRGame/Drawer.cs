@@ -25,6 +25,7 @@ namespace MyOPRGame
         public int cellSize = 20;
         private PictureBox[,] imgMatrix;
         public nonFocusedButton[] towerButtons;
+        public Button[] MenuButtons;
         //private PictureBox[,] imgMatrix2;
         //private static Semaphore semaphore = new Semaphore(1, 1);
 

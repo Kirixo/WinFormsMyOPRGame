@@ -1,7 +1,20 @@
-﻿class MenuSelector
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using System.IO;
+using System.Diagnostics;
+using System.Drawing;
+
+namespace MyOPRGame
 {
-    public static int SelectMenuItem(string[] optionsList)
+    class MenuSelector
     {
-        return -1;
+        public int SelectMenuItem(string[] optionsList, Drawer drawer)
+        {
+            return -1;
+        }
     }
 }
